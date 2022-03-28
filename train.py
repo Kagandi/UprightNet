@@ -12,6 +12,7 @@ from tensorboardX import SummaryWriter
 import sys
 import os
 from pathlib import Path
+from util import DATA_PATH
 
 
 TRAIN_BATCH_SIZE = 8
@@ -54,8 +55,8 @@ if opt.dataset == 'interiornet':
     print('========================= InteriorNet eval #images = %d ========='%test_data_size)
 
 elif opt.dataset == 'scannet':
-    train_list_path = os.path.join(Path.home(), 'code/ethz/3DV/data/scannet_samples/train_scannet_normal_list.txt')  # TODO
-    eval_list_path = os.path.join(Path.home(), 'code/ethz/3DV/data/scannet_samples/validation_scannet_normal_list.txt')  # TODO
+    train_list_path = os.path.join(Path.home(), DATA_PATH, 'train_scannet_normal_list.txt')
+    eval_list_path = os.path.join(Path.home(), DATA_PATH, 'validation_scannet_normal_list.txt')
 
     train_num_threads = 3
     train_data_loader = CreateScanNetDataLoader(opt, train_list_path, 
