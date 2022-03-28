@@ -51,3 +51,7 @@ Our upright and local coordinate systems are defined as follows (corresponding t
 ```bash
 conda install -c conda-forge tensorboardx
 ```
+or with pip:
+```
+pip install tensorboardx==2.1
+```
