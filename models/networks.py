@@ -219,11 +219,10 @@ class JointLoss(nn.Module):
             total_pitch_error = 0.0
 
         for i in range(num_samples):
-            est_lambda = torch.eig(C_mat[i, :, :])
-            est_lambda = est_lambda[0]
+            est_lambda = torch.linalg.eigvals(C_mat[i, :, :])
 
-            img_part = est_lambda[:, 1]
-            real_part = est_lambda[:, 0]
+            img_part = est_lambda.imag
+            real_part = est_lambda.real
 
             min_lambda = torch.min(real_part[torch.abs(img_part.data) < 1e-6])
 
@@ -346,11 +345,10 @@ class JointLoss(nn.Module):
             if self.opt.backprop_eig > EPSILON:
                 min_lambda = ExtractSMinEigenValue.apply(C_mat[i, :, :])
             else:
-                est_lambda = torch.eig(C_mat[i, :, :])
-                est_lambda = est_lambda[0]
+                est_lambda = torch.linalg.eigvals(C_mat[i, :, :])
 
-                img_part = est_lambda[:, 1]
-                real_part = est_lambda[:, 0]
+                img_part = est_lambda.imag
+                real_part = est_lambda.real
 
                 min_lambda = torch.min(real_part[torch.abs(img_part.data) < 1e-6]).item()
 

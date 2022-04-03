@@ -58,7 +58,7 @@ elif opt.dataset == 'scannet':
     train_list_path = os.path.join(DATA_PATH, 'train_scannet_normal_list.txt')
     eval_list_path = os.path.join(DATA_PATH, 'validation_scannet_normal_list.txt')
 
-    train_num_threads = 3
+    train_num_threads = 0  # __getitem__ in image_folder.py does not allow multithreading
     train_data_loader = CreateScanNetDataLoader(opt, train_list_path, 
                                                 True, TRAIN_BATCH_SIZE, 
                                                 train_num_threads)
@@ -67,7 +67,7 @@ elif opt.dataset == 'scannet':
     print('========================= ScanNet training #images = %d ========='%train_data_size)
 
     iteration_per_epoch = train_data_size//TRAIN_BATCH_SIZE
-    eval_num_threads = 3
+    eval_num_threads = 0  # __getitem__ in image_folder.py does not allow multithreading
 
     test_data_loader = CreateScanNetDataLoader(opt, eval_list_path, 
                                                False, EVAL_BATCH_SIZE, 
@@ -118,7 +118,7 @@ def validation_numerical(model, dataset, global_step):
             write_summary = True
         else:
             write_summary = False
-
+        write_summary = False
         cam_n_error, cam_u_error, rotation_error, \
         roll_error, pitch_error = model.evaluate_normal_pose(stacked_img, 
                                                              targets, 
@@ -163,24 +163,24 @@ def validation_numerical(model, dataset, global_step):
     print('============== avg_roll_error: %d %f'%(i, avg_roll_error))
     print('============== avg_pitch_error: %d %f'%(i, avg_pitch_error))
 
-    model.writer.add_scalar('Eval/avg_cam_n_error', 
-                            avg_cam_n_error, 
-                            global_step)
-    model.writer.add_scalar('Eval/avg_cam_u_error', 
-                            avg_cam_u_error, 
-                            global_step)
-
-    model.writer.add_scalar('Eval/avg_rotation_error', 
-                            avg_rotation_error, 
-                            global_step)
-    model.writer.add_scalar('Eval/avg_roll_error', 
-                            avg_roll_error, 
-                            global_step)
-    model.writer.add_scalar('Eval/avg_pitch_error', 
-                            avg_pitch_error, 
-                            global_step)
-
-    model.switch_to_train()
+    # model.writer.add_scalar('Eval/avg_cam_n_error',
+    #                         avg_cam_n_error,
+    #                         global_step)
+    # model.writer.add_scalar('Eval/avg_cam_u_error',
+    #                         avg_cam_u_error,
+    #                         global_step)
+    #
+    # model.writer.add_scalar('Eval/avg_rotation_error',
+    #                         avg_rotation_error,
+    #                         global_step)
+    # model.writer.add_scalar('Eval/avg_roll_error',
+    #                         avg_roll_error,
+    #                         global_step)
+    # model.writer.add_scalar('Eval/avg_pitch_error',
+    #                         avg_pitch_error,
+    #                         global_step)
+    #
+    # model.switch_to_train()
 
     return avg_cam_n_error, avg_cam_u_error, \
             avg_rotation_error, avg_roll_error, \
@@ -234,10 +234,11 @@ for epoch in range(0, 25):
                 best_pitch_error = avg_pitch_error
 
                 best_epoch = epoch
-                model.save('best_%s_%s_mode_'%(opt.dataset, opt.log_comment) \
-                    + opt.mode + '_lr_' + str(opt.lr) + '_w_svd_' + str(opt.w_svd) + \
-                    '_w_grad_' + str(opt.w_grad) + \
-                    '_backprop_eig_' + str(opt.backprop_eig))
+                model.save('model')
+                #model.save('best_%s_%s_mode_'%(opt.dataset, opt.log_comment) \
+                #    + opt.mode + '_lr_' + str(opt.lr) + '_w_svd_' + str(opt.w_svd) + \
+                #    '_w_grad_' + str(opt.w_grad) + \
+                #    '_backprop_eig_' + str(opt.backprop_eig))
 
                 if epoch >= stop_epoch:
                     print('we are done, stop training !!!')
