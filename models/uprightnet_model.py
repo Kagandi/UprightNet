@@ -258,12 +258,14 @@ class UprightNet(BaseModel):
             gt_upright_geo = targets['upright_geo'].cuda()
             gt_mask = targets['gt_mask'].cuda()
 
-            cam_n_error = self.criterion_joint.compute_normal_error(pred_cam_geo[:, 0:3, :, :].data, 
-                                                                    gt_cam_geo[:, 0:3, :, :], 
-                                                                    gt_mask)
-            cam_u_error = self.criterion_joint.compute_normal_error(pred_cam_geo[:, 3:6, :, :].data, 
-                                                                    gt_cam_geo[:, 3:6, :, :], 
-                                                                    gt_mask)
+            #cam_n_error = self.criterion_joint.compute_normal_error(pred_cam_geo[:, 0:3, :, :].data,
+            #                                                        gt_cam_geo[:, 0:3, :, :],
+            #                                                        gt_mask)
+            #cam_u_error = self.criterion_joint.compute_normal_error(pred_cam_geo[:, 3:6, :, :].data,
+            #                                                        gt_cam_geo[:, 3:6, :, :],
+            #                                                        gt_mask)
+            cam_n_error = 0
+            cam_u_error = 0
 
             rotation_error, roll_error, pitch_error = self.criterion_joint.compute_angle_error(pred_cam_geo_unit.data, 
                                                                                                pred_up_geo_unit.data,

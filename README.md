@@ -24,12 +24,12 @@ Our upright and local coordinate systems are defined as follows (corresponding t
 
 * To train the network on the InteriorNet, run 
 ```bash
-	python train.py --mode ResNet --dataset interiornet --w_grad 0.25 --w_pose 2.0
+	python3 train.py --mode ResNet --dataset interiornet --w_grad 0.25 --w_pose 2.0
 ```
 
 * To train the network on the ScanNet, run 
 ```bash
-	python train.py --mode ResNet --dataset scannet --w_grad 0.25 --w_pose 0.5
+	python3 train.py --mode ResNet --dataset scannet --w_grad 0.25 --w_pose 0.5
 ```
 
 ## Evaluation: 
@@ -50,4 +50,8 @@ Our upright and local coordinate systems are defined as follows (corresponding t
 * ModuleNotFoundError: No module named 'tensorboardX'
 ```bash
 conda install -c conda-forge tensorboardx
+```
+or with pip:
+```
+pip install tensorboardx==2.1
 ```
