@@ -234,11 +234,11 @@ for epoch in range(0, 25):
                 best_pitch_error = avg_pitch_error
 
                 best_epoch = epoch
-                model.save('model')
-                #model.save('best_%s_%s_mode_'%(opt.dataset, opt.log_comment) \
-                #    + opt.mode + '_lr_' + str(opt.lr) + '_w_svd_' + str(opt.w_svd) + \
-                #    '_w_grad_' + str(opt.w_grad) + \
-                #    '_backprop_eig_' + str(opt.backprop_eig))
+                #model.save('model')
+                model.save('best_%s_%s_mode_'%(opt.dataset, opt.log_comment) \
+                    + str(opt.mode) + '_lr_' + str(opt.lr) + '_w_svd_' + str(opt.w_pose) + \
+                    '_w_grad_' + str(opt.w_grad) + \
+                    '_backprop_eig_' + str(opt.backprop_eig))
 
                 if epoch >= stop_epoch:
                     print('we are done, stop training !!!')

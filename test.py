@@ -10,6 +10,7 @@ from data.data_loader import *
 from models.models import create_model
 import random
 from tensorboardX import SummaryWriter
+from util import DATA_PATH
 
 
 EVAL_BATCH_SIZE = 8
@@ -30,8 +31,8 @@ if opt.dataset == 'interiornet':
 
 
 elif opt.dataset == 'scannet':
-    eval_list_path = root + '/phoenix/S3/zl548/ScanNet/test_scannet_normal_list.txt'
-    eval_num_threads = 2
+    eval_list_path = os.path.join(DATA_PATH, 'test_scannet_normal_list.txt')
+    eval_num_threads = 1
     test_data_loader = CreateScanNetDataLoader(opt, eval_list_path, 
                                                     False, EVAL_BATCH_SIZE, 
                                                     eval_num_threads)
