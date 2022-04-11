@@ -20,7 +20,7 @@ root = '/'
 
 
 if opt.dataset == 'interiornet':
-    eval_list_path = root + '/phoenix/S6/wx97/interiornet/test_interiornet_normal_list.txt'
+    eval_list_path = os.path.join(DATA_PATH, 'test_interiornet_normal_list.txt')
     eval_num_threads = 3
     test_data_loader = CreateInteriorNetryDataLoader(opt, eval_list_path, 
                                                     False, EVAL_BATCH_SIZE, 

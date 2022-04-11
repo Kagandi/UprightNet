@@ -33,8 +33,8 @@ writer = SummaryWriter(summary_name)
 
 
 if opt.dataset == 'interiornet':
-    train_list_path = root + '/phoenix/S6/wx97/interiornet/train_interiornet_normal_list.txt'
-    eval_list_path = root + '/phoenix/S6/wx97/interiornet/val_interiornet_normal_list.txt'
+    train_list_path = os.path.join(DATA_PATH, 'train_interiornet_normal_list.txt')
+    eval_list_path = os.path.join(DATA_PATH, 'val_interiornet_normal_list.txt')
 
     train_num_threads = 3
     train_data_loader = CreateInteriorNetryDataLoader(opt, train_list_path, 
@@ -234,7 +234,7 @@ for epoch in range(0, 25):
                 best_pitch_error = avg_pitch_error
 
                 best_epoch = epoch
-                #model.save('model')
+
                 model.save('best_%s_%s_mode_'%(opt.dataset, opt.log_comment) \
                     + str(opt.mode) + '_lr_' + str(opt.lr) + '_w_svd_' + str(opt.w_pose) + \
                     '_w_grad_' + str(opt.w_grad) + \
