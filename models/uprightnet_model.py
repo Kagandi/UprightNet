@@ -40,7 +40,7 @@ class UprightNet(BaseModel):
             if opt.dataset == 'interiornet':            
                 model_name = '_best_interiornet_ry_exp_upright_9_sphere_ls_mode_ResnetModel3HeadsSplitNormalizationTightCoupled_lr_0.0004_w_svd_2.0_w_grad_0.25_backprop_eig_1'
             else:
-                model_name = '_best_scannet_exp_upright_9_sphere_ls_mode_ResnetModel3HeadsSplitNormalizationTightCoupled_lr_0.0004_w_svd_0.5_w_grad_0.25_backprop_eig_1'
+                model_name = '_best_scannet_exp_upright_9_sphere_ls_mode_ResNet_lr_0.0004_w_svd_0.5_w_grad_0.25_backprop_eig_1'
 
             model_parameters = self.load_network(new_model, 'G', model_name)
             new_model.load_state_dict(model_parameters)
