@@ -13,6 +13,7 @@ import torchvision.utils as vutils
 import torch.nn as nn
 
 import models.models_resnet as models_resnet
+import matplotlib.pyplot as plt
 
 
 EPSILON = 1e-8
@@ -38,7 +39,7 @@ class UprightNet(BaseModel):
 
         if not _isTrain:
             if opt.dataset == 'interiornet':            
-                model_name = '_best_interiornet_ry_exp_upright_9_sphere_ls_mode_Resnet_lr_0.0004_w_svd_2.0_w_grad_0.25_backprop_eig_1'
+                model_name = '_best_interiornet_ry_exp_upright_9_sphere_ls_mode_ResnetModel3HeadsSplitNormalizationTightCoupled_lr_0.0004_w_svd_2.0_w_grad_0.25_backprop_eig_1'
             else:
                 model_name = '_best_scannet_exp_upright_9_sphere_ls_mode_ResNet_lr_0.0004_w_svd_0.5_w_grad_0.25_backprop_eig_1'
 
@@ -300,8 +301,32 @@ class UprightNet(BaseModel):
                                                                    pred_up_geo_unit.data,
                                                                    pred_weights,
                                                                    targets, stack_error=True)
+            
+            print("rotation_error: ", rotation_error)
+            print("roll_error: ", roll_error)
+            print("pitch_error: ", pitch_error)
 
         return rotation_error, roll_error, pitch_error
+
+
+    def test_roll_pitch(self, input_, targets):
+
+        # switch to evaluation mode
+        with torch.no_grad():           
+            input_imgs = Variable(input_.cuda() , requires_grad = False)
+
+            pred_cam_geo, pred_up_geo, pred_weights = self.netG.forward(input_imgs)
+            # normalize predicted surface nomral
+            pred_cam_geo_unit = self.criterion_joint.normalize_coords(pred_cam_geo)
+            pred_up_geo_unit = self.criterion_joint.normalize_normal(pred_up_geo)
+            
+            pred_roll, pred_pitch, gt_roll, \
+            gt_pitch = self.criterion_joint.get_rp_prediction(pred_cam_geo_unit.data, 
+                                                              pred_up_geo_unit.data,
+                                                              pred_weights,
+                                                              targets, stack_error=True)
+
+        return pred_roll, pred_pitch, gt_roll, gt_pitch
 
     def switch_to_train(self):
         self.netG.train()
