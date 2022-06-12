@@ -14,12 +14,18 @@ from util import DATA_PATH
 from pathlib import Path
 import os.path
 from os import path
+import fileinput
 
 EVAL_BATCH_SIZE = 2
 opt = TestOptions().parse()  # set CUDA_VISIBLE_DEVICES before import torch
 
 root = '/'
 
+for line in fileinput.input([os.path.join(DATA_PATH, 'test_scannet_normal_list.txt')], inplace=True):
+    if line[0] != "/":
+        sys.stdout.write((DATA_PATH+'/{l}').format(l=line))
+    else:
+        sys.stdout.write('{l}'.format(l=line))
 
 if opt.dataset == 'interiornet':
     eval_list_path = root + '/phoenix/S6/wx97/interiornet/test_interiornet_normal_list.txt'
@@ -62,7 +68,7 @@ def test_numerical(model, dataset, global_step):
     time_list = []
 
     count = 0.0
-
+    
     model.switch_to_eval()
 
     count = 0
@@ -71,7 +77,8 @@ def test_numerical(model, dataset, global_step):
         stacked_img = data[0]
         targets = data[1]
         
-        image_path = os.path.join(DATA_PATH, targets["img_path"][0])
+        image_path = targets["img_path"][0]
+
         if(path.exists(image_path)):
 
             start_ = time.perf_counter_ns()
