@@ -16,7 +16,7 @@ import os.path
 from os import path
 import fileinput
 
-EVAL_BATCH_SIZE = 2
+EVAL_BATCH_SIZE = 1
 opt = TestOptions().parse()  # set CUDA_VISIBLE_DEVICES before import torch
 
 root = '/'

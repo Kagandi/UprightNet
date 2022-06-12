@@ -12,24 +12,36 @@ The code is tested with Python3, Pytorch >= 1.0 and CUDA >= 10.0, the dependenci
 
 ## How to create UprightNet gravity estimaton data:
 
-1. Download and extract from https://drive.google.com/drive/folders/1WdNAESqDYcUPQyXAW6PvlcdQIYlOEXIw:
-	a) ScanNet.zip (for UprightNet preprocessed ScanNet data)
-	b) checkpoints.zip (pretrained weights)
-	c) test_scannet_normal_list.txt (List with ScanNet test data)
+- Download the pretrained weights from [here](https://drive.google.com/file/d/15ZIFwPHP9W50YnsM4JPQGrlcvOeM3fM4/view?usp=sharing): https://drive.google.com/file/d/15ZIFwPHP9W50YnsM4JPQGrlcvOeM3fM4/view?usp=sharing
+
+- Copy the weights to the folder UprightNet/checkpoints/test_local/
+
+If your computer does not have an gpu, check out the branch "no-gpu".
+
+
+To create the data folders, do the following steps:
+
+1. Download the pretrained weights as described in the section above.
+
+2. Download and extract from https://drive.google.com/drive/folders/1V2KIsXIZ-2-5kGDaErTIpRNnBV2zhVjG?usp=sharing:
+	  sample_data.zip (for UprightNet preprocessed ScanNet data)
 	
-2. Adapt the paths of test_scannet_normal_list.txt to the path of ScanNet data (e.g. with find&replace)
+  Alternatively you can use 
+    ScanNet.zip and test_scannet_normal_list.txt from https://drive.google.com/drive/folders/1WdNAESqDYcUPQyXAW6PvlcdQIYlOEXIw instead of sample_data.zip, which contains all scenes.
 
-3. Copy checkpoints folder to root directory of UprightNet repo
+3. Copy the sample_data folder into the root directry of the UprightNet repo (same level as folder checkpoints)
 
-4. Adapt DATA_PATH in util/config.py to be the directory where test_scannet_normal_list.txt is located
+4. Adapt DATA_PATH in util/config.py to be the absolute path of the directory where test_scannet_normal_list.txt is located
 
-5. To add the predicted gravity vector to the data folders, run
+5. To add the predicted gravity vector to the scene folders, run
 	python3 test.py --mode ResNet --dataset scannet
 	
-	Each scene folder should now contain 4 new folders: pose_pred, pose_gt, gravity_pred, gravity_gt
+	Each scene folder in sample_data/data should now contain 4 new folders: pose_pred, pose_gt, gravity_pred, gravity_gt
 
-	If your computer does not have an gpu, check out the branch "no-gpu".
-
+6. To get the data structure needed for the pose prediction, adapt in 3d-vision/visn/utils/create_data_folder.py 
+  - the variable "our_data_path" to be the path where the scene data is located (should be sth like .../sample_data/data)
+  - the variable "visn_data_path" to be the folder where the new scene folders should be created
+  - Run "python3 create_data_folder.py"
 
 ## Dataset
 * Download pre-processed InteriorNet and ScanNet, as well as their corresponding training/validation/testing txt files from [link](https://drive.google.com/drive/folders/1WdNAESqDYcUPQyXAW6PvlcdQIYlOEXIw?usp=sharing)
