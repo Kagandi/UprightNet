@@ -46,7 +46,7 @@ Our upright and local coordinate systems are defined as follows (corresponding t
 ```
 
 
-## Try out:
+## Error handling:
 * ModuleNotFoundError: No module named 'tensorboardX'
 ```bash
 conda install -c conda-forge tensorboardx

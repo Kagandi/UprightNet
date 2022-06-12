@@ -534,8 +534,8 @@ class ScanNetFolder(data.Dataset):
     def __init__(self, opt, list_path, is_train):
         img_list = make_dataset(list_path)
         if len(img_list) == 0:
-            raise(RuntimeError("Found 0 images in: " + root + "\n"
-                               "Supported image extensions are: " + ",".join(IMG_EXTENSIONS)))
+            raise(RuntimeError("Found 0 images in: " + list_path + "\n"
+                               "Supported image extensions are: " + ","))
 
         self.list_path = list_path
         self.img_list = img_list

@@ -13,6 +13,7 @@ import torchvision.utils as vutils
 import torch.nn as nn
 
 import models.models_resnet as models_resnet
+import matplotlib.pyplot as plt
 
 
 EPSILON = 1e-8
@@ -300,8 +301,70 @@ class UprightNet(BaseModel):
                                                                    pred_up_geo_unit.data,
                                                                    pred_weights,
                                                                    targets, stack_error=True)
+            
+            '''pred_roll, pred_pitch, gt_roll, \
+            gt_pitch = self.criterion_joint.get_rp_prediction(pred_cam_geo_unit.data, 
+                                                              pred_up_geo_unit.data,
+                                                              pred_weights,
+                                                              targets, stack_error=True)'''
+
+            '''print("pred_cam_geo_unit.data: ", pred_cam_geo_unit.data)
+            print("pred_up_geo_unit.data: ", pred_up_geo_unit.data)
+            #print("targets: ", targets)
+            print("targets['gt_up_vector'].cuda(): ", targets['gt_up_vector'].cuda())
+            print("targets['gt_rp'].cuda(): ", targets['gt_rp'].cuda())'''
+
+
+            """i = 0
+            print("input_imgs: ", input_imgs.size())
+            plt.imshow(  input_imgs.cpu()[i,:,:,:].permute(1, 2, 0)  )
+            plt.savefig("pic/input_imgs.png")
+
+            print("pred_cam_geo: ", pred_cam_geo.size())
+            plt.imshow(  pred_cam_geo.cpu()[i,0:3,:,:].permute(1, 2, 0)  )
+            plt.savefig("pic/pred_cam_geo.png")
+
+            print("pred_up_geo: ", pred_up_geo.size())
+            plt.imshow(  pred_up_geo.cpu()[i,:,:,:].permute(1, 2, 0)  )
+            plt.savefig("pic/pred_up_geo.png")
+
+            print("pred_weights: ", pred_weights.size())
+            plt.imshow(  pred_weights.cpu()[i,:,:,:].permute(1, 2, 0)  )
+            plt.savefig("pic/pred_weights.png")
+
+            print("pred_cam_geo_unit: ", pred_cam_geo_unit.size())
+            plt.imshow(  pred_cam_geo_unit.cpu()[i,0:3,:,:].permute(1, 2, 0)  )
+            plt.savefig("pic/pred_cam_geo_unit.png")
+
+            print("pred_up_geo_unit: ", pred_up_geo_unit.size())
+            plt.imshow(  pred_up_geo_unit.cpu()[i,:,:,:].permute(1, 2, 0)  )
+            plt.savefig("pic/pred_up_geo_unit.png")"""
+
+            '''print("rotation_error: ", rotation_error)
+            print("roll_error: ", roll_error)
+            print("pitch_error: ", pitch_error)'''
 
         return rotation_error, roll_error, pitch_error
+
+
+    def test_roll_pitch(self, input_, targets):
+
+        # switch to evaluation mode
+        with torch.no_grad():           
+            input_imgs = Variable(input_.cuda() , requires_grad = False)
+
+            pred_cam_geo, pred_up_geo, pred_weights = self.netG.forward(input_imgs)
+            # normalize predicted surface nomral
+            pred_cam_geo_unit = self.criterion_joint.normalize_coords(pred_cam_geo)
+            pred_up_geo_unit = self.criterion_joint.normalize_normal(pred_up_geo)
+            
+            pred_roll, pred_pitch, gt_roll, \
+            gt_pitch, est_up_n, gt_up_n  = self.criterion_joint.get_rp_prediction(pred_cam_geo_unit.data, 
+                                                                                  pred_up_geo_unit.data,
+                                                                                  pred_weights,
+                                                                                  targets, stack_error=True)
+
+        return pred_roll, pred_pitch, gt_roll, gt_pitch, est_up_n, gt_up_n
 
     def switch_to_train(self):
         self.netG.train()
