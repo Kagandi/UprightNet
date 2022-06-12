@@ -71,7 +71,7 @@ def test_numerical(model, dataset, global_step):
         stacked_img = data[0]
         targets = data[1]
         
-        image_path = targets["img_path"][0]
+        image_path = os.path.join(DATA_PATH, targets["img_path"][0])
         if(path.exists(image_path)):
 
             start_ = time.perf_counter_ns()
