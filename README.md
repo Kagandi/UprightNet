@@ -25,9 +25,6 @@ To create the data folders, do the following steps:
 
 2. Download and extract from https://drive.google.com/drive/folders/1V2KIsXIZ-2-5kGDaErTIpRNnBV2zhVjG?usp=sharing:
 	  sample_data.zip (for UprightNet preprocessed ScanNet data)
-	
-  Alternatively you can use 
-    ScanNet.zip and test_scannet_normal_list.txt from https://drive.google.com/drive/folders/1WdNAESqDYcUPQyXAW6PvlcdQIYlOEXIw instead of sample_data.zip, which contains all scenes.
 
 3. Copy the sample_data folder into the root directry of the UprightNet repo (same level as folder checkpoints)
 
