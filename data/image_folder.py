@@ -551,11 +551,14 @@ class ScanNetFolder(data.Dataset):
     def load_imgs(self, img_path, normal_path, rot_path, intrinsic_path):
         img = cv2.imread(img_path)
         img = img[:, :, ::-1]
+        try:
+            normal = (np.float32(cv2.imread(normal_path, -1))/65535. * 2.0) - 1.0
+            cam_normal = normal[:, :, ::-1]
 
-        normal = (np.float32(cv2.imread(normal_path, -1))/65535. * 2.0) - 1.0
-        cam_normal = normal[:, :, ::-1]
-
-        mask = np.float32(np.linalg.norm(cam_normal, axis=-1) > 0.9) * np.float32(np.linalg.norm(cam_normal, axis=-1) < 1.1) #* np.float32(np.max(img,-1) > 1e-3)
+            mask = np.float32(np.linalg.norm(cam_normal, axis=-1) > 0.9) * np.float32(np.linalg.norm(cam_normal, axis=-1) < 1.1) #* np.float32(np.max(img,-1) > 1e-3)
+        except:
+            cam_normal = np.zeros_like(img)
+            mask = np.zeros_like(img[:, :, 0])
 
         R_g_c = np.identity(3)
         try:
