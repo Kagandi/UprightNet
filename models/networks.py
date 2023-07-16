@@ -317,6 +317,87 @@ class JointLoss(nn.Module):
                 total_pitch_error += abs(pred_pitch - gt_pitch)*180.0/math.pi
 
         return total_rot_error, total_roll_error, total_pitch_error
+    
+
+    def compute_angle(self, pred_cam_geo_unit, 
+                            pred_up_geo_unit, pred_weights, 
+                             stack_error=False):
+
+        cos_criterion = nn.CosineSimilarity(dim=0)
+
+        num_pixels = pred_cam_geo_unit.size(2) * pred_cam_geo_unit.size(3)
+        num_samples = pred_cam_geo_unit.size(0)
+
+        identity_mat = torch.eye(3).float().cuda()
+        identity_mat_rep = identity_mat.unsqueeze(0).repeat(num_samples,1,1)#, requires_grad=False)
+        # zeros_mat = Variable(torch.zeros(3).float().cuda(), requires_grad=False)
+
+        weights_n = pred_weights[:, 0:1, :, :].repeat(1,3,1,1)
+        weights_u = pred_weights[:, 1:2, :, :].repeat(1,3,1,1)
+        weights_t = pred_weights[:, 2:3, :, :].repeat(1,3,1,1)
+
+        pred_cam_n = pred_cam_geo_unit[:, 0:3, :, :]
+        pred_cam_u = pred_cam_geo_unit[:, 3:6, :, :]
+        pred_cam_t = pred_cam_geo_unit[:, 6:9, :, :]
+
+        pred_cam_n_w = pred_cam_n * weights_n
+        pred_cam_u_w = pred_cam_u * weights_u
+        pred_cam_t_w = pred_cam_t * weights_t
+
+        pred_cam_n_w_flat = pred_cam_n_w.view(num_samples, 
+                                              pred_cam_n_w.size(1), 
+                                              num_pixels)
+        pred_cam_u_w_flat = pred_cam_u_w.view(num_samples, 
+                                              pred_cam_u_w.size(1), 
+                                              num_pixels)
+        pred_cam_t_w_flat = pred_cam_t_w.view(num_samples, 
+                                              pred_cam_t_w.size(1), 
+                                              num_pixels)
+
+        # M * 3 x 3N matrix
+        A_w = torch.cat((pred_cam_n_w_flat, pred_cam_u_w_flat, pred_cam_t_w_flat), dim=2)
+        
+        pred_up_geo_unit_w = pred_weights * pred_up_geo_unit
+        pred_up_geo_unit_w_flat = pred_up_geo_unit_w.view(num_samples, pred_up_geo_unit.size(1), num_pixels)
+        # M * 1 * 3N
+        b_w = torch.cat((pred_up_geo_unit_w_flat[:, 0:1, :], pred_up_geo_unit_w_flat[:, 1:2, :], pred_up_geo_unit_w_flat[:, 2:3, :]), dim=2)
+
+        # M*3*3
+        H = torch.bmm(A_w, torch.transpose(A_w, 1, 2))
+        # M*3*1
+        g = torch.bmm(A_w, torch.transpose(b_w, 1, 2))
+        ggT = torch.bmm(g, torch.transpose(g, 1, 2))
+
+        # C_mat = torch.cat( (torch.cat((-A1, -A0), dim=2), torch.cat((identity_mat, zeros_mat), dim=2)), dim=1)
+        C_mat = torch.cat( (torch.cat((H, -identity_mat_rep), dim=2), torch.cat((-ggT, H), dim=2)), dim=1)
+
+        if stack_error:
+            total_rot_error =  []
+            total_roll_error = []
+            total_pitch_error = []
+        else:
+            total_rot_error = 0.0
+            total_roll_error = 0.0
+            total_pitch_error = 0.0
+
+        for i in range(num_samples):
+            est_lambda = torch.linalg.eigvals(C_mat[i, :, :])
+
+            img_part = est_lambda.imag
+            real_part = est_lambda.real
+
+            min_lambda = torch.min(real_part[torch.abs(img_part.data) < 1e-6])
+
+            est_up_n = torch.matmul(torch.pinverse(H[i, :, :] - min_lambda * identity_mat), g[i, :, :])
+            est_up_n_norm = torch.sqrt( torch.sum(est_up_n**2) )
+            est_up_n = est_up_n[:, 0]/est_up_n_norm
+
+            up_diff_cos = cos_criterion(est_up_n, gt_up_vector[i, :])
+
+            # [pred_roll, pred_pitch] = decompose_up_n(est_up_n.cpu().numpy()) 
+            # [gt_roll, gt_pitch] = decompose_up_n(gt_up_vector[i, :].cpu().numpy()) 
+
+            return est_up_n
 
     def compute_normal_gradient_loss(self, gt_n_unit, pred_n_unit, mask):
         n_diff = pred_n_unit - gt_n_unit

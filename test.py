@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     opt = TestOptions().parse()  # set CUDA_VISIBLE_DEVICES before import torch
 
-    root = '/'
+    # root = '/'
 
     # for line in fileinput.input([os.path.join(DATA_PATH, 'test_scannet_normal_list.txt')], inplace=True):
     #     if line[0] != "/":
@@ -68,10 +68,10 @@ if __name__ == '__main__':
 
     torch.backends.cudnn.enabled = True
     torch.backends.cudnn.benchmark = True
-    global_step = 0
 
 
-    def test_numerical(model, dataset, global_step):
+
+    def test_numerical(model, dataset):
         rot_e_list = []
         roll_e_list = []
         pitch_e_list = []
@@ -182,4 +182,4 @@ if __name__ == '__main__':
         print('std_time ', std_time)
 
 
-    test_numerical(model, test_dataset, global_step)
+    test_numerical(model, test_dataset)
