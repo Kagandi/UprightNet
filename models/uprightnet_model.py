@@ -295,13 +295,15 @@ class UprightNet(BaseModel):
             pred_up_geo_unit = self.criterion_joint.normalize_normal(pred_up_geo)
 
 
-            res = self.criterion_joint.compute_angle(pred_cam_geo_unit.data, 
+            rotation_error, roll_error, \
+            pitch_error = self.criterion_joint.compute_angle(pred_cam_geo_unit.data, 
                                                                    pred_up_geo_unit.data,
                                                                    pred_weights)
             
         
 
-        return res
+        return rotation_error, roll_error, \
+            pitch_error
 
     def test_angle_error(self, input_, targets):
 

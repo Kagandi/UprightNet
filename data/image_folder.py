@@ -558,23 +558,28 @@ class ScanNetFolder(data.Dataset):
         mask = np.float32(np.linalg.norm(cam_normal, axis=-1) > 0.9) * np.float32(np.linalg.norm(cam_normal, axis=-1) < 1.1) #* np.float32(np.max(img,-1) > 1e-3)
 
         R_g_c = np.identity(3)
+        try:
+            with open(rot_path, 'r') as f:
+                rot_row = f.readlines()
 
-        with open(rot_path, 'r') as f:
-            rot_row = f.readlines()
-
-            for i in range(3):
-                r1, r2, r3 = rot_row[i].split()
-                R_g_c[i, :] = np.array((np.float32(r1), np.float32(r2), np.float32(r3)))
+                for i in range(3):
+                    r1, r2, r3 = rot_row[i].split()
+                    R_g_c[i, :] = np.array((np.float32(r1), np.float32(r2), np.float32(r3)))
+        except FileNotFoundError:
+            pass
 
         intrinsic = np.identity(3)
 
-        with open(intrinsic_path, 'r') as f:
-            intrinsic_row = f.readlines()
+        try:
+            with open(intrinsic_path, 'r') as f:
+                intrinsic_row = f.readlines()
 
-            for i in range(2):
-                i1, i2, i3 = intrinsic_row[i].split()
-                intrinsic[i, :] = np.array((np.float32(i1), np.float32(i2), np.float32(i3)))
-
+                for i in range(2):
+                    i1, i2, i3 = intrinsic_row[i].split()
+                    intrinsic[i, :] = np.array((np.float32(i1), np.float32(i2), np.float32(i3)))
+        except FileNotFoundError:
+            pass
+        
         upright_normal = self.rotate_normal(R_g_c, cam_normal)
 
         return {'img': img, 
