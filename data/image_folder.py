@@ -707,12 +707,22 @@ class ScanNetFolder(data.Dataset):
             train_data = self.resize_imgs(train_data, self.input_width, self.input_height)
 
         else:
-            crop_h, crop_w = self.load_precomputed_crop_hw(normal_path)
-            start_y = int((original_h - crop_h)/2)#random.randint(0, original_h - crop_h)
-            start_x = int((original_w - crop_w)/2)#random.randint(0, original_w - crop_w)
+            try:
+                crop_h, crop_w = self.load_precomputed_crop_hw(normal_path)
+                start_y = int((original_h - crop_h)/2)#random.randint(0, original_h - crop_h)
+                start_x = int((original_w - crop_w)/2)#random.randint(0, original_w - crop_w)
 
-            train_data = self.crop_imgs(train_data, start_x, start_y, crop_w, crop_h)
-            train_data = self.resize_imgs(train_data, self.input_width, self.input_height)
+                train_data = self.crop_imgs(train_data, start_x, start_y, crop_w, crop_h)
+                train_data = self.resize_imgs(train_data, self.input_width, self.input_height)
+            except FileNotFoundError:
+                crop_h = random.randint(380, original_h)
+                crop_w = int(round(crop_h*float(original_w)/float(original_h)))
+                print(crop_h, crop_w)
+                start_y = random.randint(0, original_h - crop_h)
+                start_x = random.randint(0, original_w - crop_w)
+
+                train_data = self.crop_imgs(train_data, start_x, start_y, crop_w, crop_h)
+                train_data = self.resize_imgs(train_data, self.input_width, self.input_height)
 
         ratio_x = float(train_data['img'].shape[1])/float(crop_w)
         ratio_y = float(train_data['img'].shape[0])/float(crop_h)
