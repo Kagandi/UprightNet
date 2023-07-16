@@ -283,6 +283,25 @@ class UprightNet(BaseModel):
 
             return cam_n_error, cam_u_error, rotation_error, roll_error, pitch_error
 
+    def get_angle(self, input_,):
+
+        # switch to evaluation mode
+        with torch.no_grad():           
+            input_imgs = Variable(input_.cuda() , requires_grad = False)
+
+            pred_cam_geo, pred_up_geo, pred_weights = self.netG.forward(input_imgs)
+            # normalize predicted surface nomral
+            pred_cam_geo_unit = self.criterion_joint.normalize_coords(pred_cam_geo)
+            pred_up_geo_unit = self.criterion_joint.normalize_normal(pred_up_geo)
+
+
+            res = self.criterion_joint.compute_angle(pred_cam_geo_unit.data, 
+                                                                   pred_up_geo_unit.data,
+                                                                   pred_weights)
+            
+        
+
+        return res
 
     def test_angle_error(self, input_, targets):
 

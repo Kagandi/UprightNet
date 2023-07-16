@@ -320,8 +320,7 @@ class JointLoss(nn.Module):
     
 
     def compute_angle(self, pred_cam_geo_unit, 
-                            pred_up_geo_unit, pred_weights, 
-                             stack_error=False):
+                            pred_up_geo_unit, pred_weights):
 
         cos_criterion = nn.CosineSimilarity(dim=0)
 
@@ -371,14 +370,6 @@ class JointLoss(nn.Module):
         # C_mat = torch.cat( (torch.cat((-A1, -A0), dim=2), torch.cat((identity_mat, zeros_mat), dim=2)), dim=1)
         C_mat = torch.cat( (torch.cat((H, -identity_mat_rep), dim=2), torch.cat((-ggT, H), dim=2)), dim=1)
 
-        if stack_error:
-            total_rot_error =  []
-            total_roll_error = []
-            total_pitch_error = []
-        else:
-            total_rot_error = 0.0
-            total_roll_error = 0.0
-            total_pitch_error = 0.0
 
         for i in range(num_samples):
             est_lambda = torch.linalg.eigvals(C_mat[i, :, :])
@@ -392,7 +383,7 @@ class JointLoss(nn.Module):
             est_up_n_norm = torch.sqrt( torch.sum(est_up_n**2) )
             est_up_n = est_up_n[:, 0]/est_up_n_norm
 
-            up_diff_cos = cos_criterion(est_up_n, gt_up_vector[i, :])
+            # up_diff_cos = cos_criterion(est_up_n, gt_up_vector[i, :])
 
             # [pred_roll, pred_pitch] = decompose_up_n(est_up_n.cpu().numpy()) 
             # [gt_roll, gt_pitch] = decompose_up_n(gt_up_vector[i, :].cpu().numpy()) 
