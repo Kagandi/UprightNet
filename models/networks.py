@@ -389,6 +389,13 @@ class JointLoss(nn.Module):
             # [gt_roll, gt_pitch] = decompose_up_n(gt_up_vector[i, :].cpu().numpy()) 
 
             return est_up_n
+        
+    def compute_angle2(self, pred_cam_geo_unit, 
+                            pred_up_geo_unit, pred_weights):
+        est_up_n = self.compute_angle2(pred_cam_geo_unit, 
+                            pred_up_geo_unit, pred_weights)
+        [pred_roll, pred_pitch] = decompose_up_n(est_up_n.cpu().numpy()) 
+
 
     def compute_normal_gradient_loss(self, gt_n_unit, pred_n_unit, mask):
         n_diff = pred_n_unit - gt_n_unit
