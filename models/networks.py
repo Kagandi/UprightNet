@@ -392,7 +392,7 @@ class JointLoss(nn.Module):
         
     def compute_angle2(self, pred_cam_geo_unit, 
                             pred_up_geo_unit, pred_weights):
-        est_up_n = self.compute_angle2(pred_cam_geo_unit, 
+        est_up_n = self.compute_angle(pred_cam_geo_unit, 
                             pred_up_geo_unit, pred_weights)
         [pred_roll, pred_pitch] = decompose_up_n(est_up_n.cpu().numpy()) 
         return pred_roll, pred_pitch, est_up_n[2]
