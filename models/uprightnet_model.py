@@ -295,34 +295,33 @@ class UprightNet(BaseModel):
             pred_up_geo_unit = self.criterion_joint.normalize_normal(pred_up_geo)
 
 
-            pitch, roll , rotation = self.criterion_joint.compute_angle(pred_cam_geo_unit.data, 
+            roll, pitch , est_up_n = self.criterion_joint.compute_angle(pred_cam_geo_unit.data, 
                                                                    pred_up_geo_unit.data,
                                                                    pred_weights)
             
         
 
-        return pitch, roll , rotation
+        return pitch, roll , est_up_n
     
 
-    def get_angle2(self, input_,):
+    # def get_angle2(self, input_,):
 
-        # switch to evaluation mode
-        with torch.no_grad():           
-            input_imgs = Variable(input_.cuda() , requires_grad = False)
+    #     # switch to evaluation mode
+    #     with torch.no_grad():           
+    #         input_imgs = Variable(input_.cuda() , requires_grad = False)
 
-            pred_cam_geo, pred_up_geo, pred_weights = self.netG.forward(input_imgs)
-            # normalize predicted surface nomral
-            pred_cam_geo_unit = self.criterion_joint.normalize_coords(pred_cam_geo)
-            pred_up_geo_unit = self.criterion_joint.normalize_normal(pred_up_geo)
+    #         pred_cam_geo, pred_up_geo, pred_weights = self.netG.forward(input_imgs)
+    #         # normalize predicted surface nomral
+    #         pred_cam_geo_unit = self.criterion_joint.normalize_coords(pred_cam_geo)
+    #         pred_up_geo_unit = self.criterion_joint.normalize_normal(pred_up_geo)
 
 
-            pitch, roll , rotation = self.criterion_joint.compute_angle2(pred_cam_geo_unit.data, 
-                                                                   pred_up_geo_unit.data,
-                                                                   pred_weights)
-            
+    #         roll, pitch , rotation = self.criterion_joint.compute_angle2(pred_cam_geo_unit.data, 
+    #                                                                pred_up_geo_unit.data,
+    #                                                                pred_weights)
         
 
-        return pitch, roll , rotation
+    #     return pitch, roll , rotation
 
     def test_angle_error(self, input_, targets):
 
