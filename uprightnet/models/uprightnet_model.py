@@ -283,8 +283,22 @@ class UprightNet(BaseModel):
             return cam_n_error, cam_u_error, rotation_error, roll_error, pitch_error
 
     def get_angle(self, input_,):
+        """
+        Get the roll and pitch angle of the input image
+        Parameters
+        ----------
+        input_ : torch.Tensor
+            Input image
+        Returns
+        -------
+        pitch : float
+            Pitch angle
+        roll : float
+            Roll angle
+        est_up_n : numpy.ndarray
+            Is the estimated up vector computed by constrained weighted least square
+        """
 
-        # switch to evaluation mode
         with torch.no_grad():           
             input_imgs = Variable(input_.cuda() , requires_grad = False)
 

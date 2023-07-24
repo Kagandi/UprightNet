@@ -20,8 +20,17 @@ or
 ```console
 pip install git+https://github.com/Kagandi/UprightNet.git@main
 ```
+## Inference
+Inference demo available in the notebooks folder.
+The demo should work on Google Colab.
 
-## How to create UprightNet gravity estimaton data:
+## Coordinate system
+Our upright and local coordinate systems are defined as follows (corresponding to the normal images in the pre-processed datasets):
+* Z upward, Y right, X backward , equivalent to
+* Roll negative -> image rotate counterclockwise, Pitch positive -> camera rotate up
+
+
+## How to create UprightNet gravity estimation data:
 
 - Download the pretrained weights from [here](https://drive.google.com/file/d/15ZIFwPHP9W50YnsM4JPQGrlcvOeM3fM4/view?usp=sharing): https://drive.google.com/file/d/15ZIFwPHP9W50YnsM4JPQGrlcvOeM3fM4/view?usp=sharing
 
@@ -55,10 +64,6 @@ To create the data folders, do the following steps:
 * Download pre-processed InteriorNet and ScanNet, as well as their corresponding training/validation/testing txt files from [link](https://drive.google.com/drive/folders/1WdNAESqDYcUPQyXAW6PvlcdQIYlOEXIw?usp=sharing)
 * Modify the paths in train.py, test.py and txt files to match the dataset path in your machine.
 
-## Coordinate system
-Our upright and local coordinate systems are defined as follows (corresponding to the normal images in the pre-processed datasets):
-* Z upward, Y right, X backward , equivalent to
-* Roll negative -> image rotate counterclockwise, Pitch positive -> camera rotate up
 
 
 ## Training
