@@ -9,7 +9,6 @@ import sys
 from data.data_loader import *
 from models.models import create_model
 import random
-from tensorboardX import SummaryWriter
 
 class UprightNetWrapper(object):
     def __init__(self):

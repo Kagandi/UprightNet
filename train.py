@@ -8,7 +8,6 @@ from options.train_options import TrainOptions
 from data.data_loader import *
 from models.models import create_model
 import random
-from tensorboardX import SummaryWriter
 import sys
 import os
 from pathlib import Path
@@ -29,7 +28,11 @@ summary_name = opt.dataset + '_runs/' + \
             '_w_grad_' + str(opt.w_grad) + \
             '_backprop_eig_' + str(opt.backprop_eig)
 
-writer = SummaryWriter(summary_name)
+try:
+    from tensorboardX import SummaryWriter
+    writer = SummaryWriter(summary_name)
+except ImportError:
+    SummaryWriter = None
 
 
 if opt.dataset == 'interiornet':
