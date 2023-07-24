@@ -1,11 +1,7 @@
 import torch.utils.data as data
-import pickle
-import PIL
 import numpy as np
 import torch
-import os
 import math, random
-import os.path
 import sys
 import cv2
 import skimage

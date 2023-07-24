@@ -1,4 +1,4 @@
-from data.dataset_loader import *
+from uprightnet.data.dataset_loader import *
 
 
 def CreateInteriorNetryDataLoader(opt, list_path, 

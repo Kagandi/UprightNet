@@ -1,8 +1,8 @@
 import random
 import numpy as np
 import torch.utils.data
-from data.base_data_loader import BaseDataLoader
-from data.image_folder import *
+from uprightnet.data.base_data_loader import BaseDataLoader
+from uprightnet.data.image_folder import *
 import sys
 
 
