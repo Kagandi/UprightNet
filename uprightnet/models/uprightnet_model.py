@@ -300,7 +300,7 @@ class UprightNet(BaseModel):
             
         
 
-        return pitch, roll , est_up_n
+        return pitch, roll , est_up_n.cpu().numpy()
     
 
     # def get_angle2(self, input_,):
