@@ -1,16 +1,11 @@
 from __future__ import division
-import time
 import torch
 import numpy as np
-from torch.autograd import Variable
-import models.networks
-from options.train_options import TrainOptions
-from data.data_loader import *
-from models.models import create_model
-import random
+from uprightnet.options.train_options import TrainOptions
+from uprightnet.data.data_loader import *
+from uprightnet.models.models import create_model
 import sys
 import os
-from pathlib import Path
 from util import DATA_PATH
 
 

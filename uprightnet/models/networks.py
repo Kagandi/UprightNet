@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.sparse
 from torch.autograd import Variable
 import numpy as np
-import sys
 from torch.autograd import Function
 import math
 from scipy import misc 

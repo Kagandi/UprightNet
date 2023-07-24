@@ -12,7 +12,7 @@ import cv2
 import torchvision.utils as vutils
 import torch.nn as nn
 
-import models.models_resnet as models_resnet
+import uprightnet.models.models_resnet as models_resnet
 
 
 EPSILON = 1e-8

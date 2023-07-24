@@ -2,18 +2,13 @@ from __future__ import division
 import time
 import torch
 import numpy as np
-from torch.autograd import Variable
-import models.networks
-from options.test_options import TestOptions 
+from uprightnet.options.test_options import TestOptions 
 import sys
-from data.data_loader import *
-from models.models import create_model
-import random
-from util import DATA_PATH
+from uprightnet.data.data_loader import *
+from uprightnet.models.models import create_model
 from pathlib import Path
-import os.path
 from os import path
-import fileinput
+
 
 EVAL_BATCH_SIZE = 1
 
