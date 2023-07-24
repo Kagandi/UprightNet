@@ -4,11 +4,22 @@ PyTorch implementation of paper "UprightNet: Geometry-Aware Camera Orientation E
 
 ## Dependency
 The code is tested with Python3, Pytorch >= 1.0 and CUDA >= 10.0, the dependencies includes 
-* tensorboardX
+* tensorboardX (only for training, not needed for inference)
 * matplotlib
 * opencv
 * scikit-image
 * scipy
+
+## Installation
+```console
+  git clone https://github.com/Kagandi/UprightNet.git
+  cd UprightNet
+  pip install . 
+```
+or
+```console
+pip install git+https://github.com/Kagandi/UprightNet.git@main
+```
 
 ## How to create UprightNet gravity estimaton data:
 
