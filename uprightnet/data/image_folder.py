@@ -717,7 +717,7 @@ class ScanNetFolder(data.Dataset):
             except FileNotFoundError:
                 crop_h = random.randint(380, original_h)
                 crop_w = int(round(crop_h*float(original_w)/float(original_h)))
-                print(crop_h, crop_w)
+                # print(crop_h, crop_w)
                 start_y = random.randint(0, original_h - crop_h)
                 start_x = random.randint(0, original_w - crop_w)
 
